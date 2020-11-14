@@ -12,8 +12,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 
-class Check(declarative_base()):
-    __tablename__ = 'check'
+class Measurement(declarative_base()):
+    __tablename__ = 'speed_measurement'
     id = Column(Integer, primary_key=True)
     client_ip = Column(String)
     client_lat = Column(Float)
@@ -41,7 +41,7 @@ def take_measurement():
     upload = speed_test.upload()
     config = speed_test.get_config()
 
-    check = Check(
+    measurement = Measurement(
         client_ip=config['client']['ip'],
         client_lat=config['client']['lat'],
         client_lon=config['client']['lon'],
@@ -59,8 +59,9 @@ def take_measurement():
         success=True,
         message='Pass.')
 
-    file = "{}.pickle".format(check.timestamp.strftime("%Y_%d_%m-%H_%M_%S-%f"))
-    pickle.dump(check, open(file, "wb"))
+    file = "{}.pickle".format(
+        measurement.timestamp.strftime("%Y_%d_%m-%H_%M_%S-%f"))
+    pickle.dump(measurement, open(file, "wb"))
     logging.info("Measurement {} SAVED\n".format(file))
 
 
@@ -83,18 +84,18 @@ def get_session():
     return reusable_session
 
 
-def persist_measurement(check, file):
+def persist_measurement(measurement, file):
     session = get_session()
-    session.add(check)
+    session.add(measurement)
     session.commit()
-    logging.info("Measurement {} PERSISTED id {}".format(file, check.id))
+    logging.info("Measurement {} PERSISTED id {}".format(file, measurement.id))
     
 
 def record_measurements():
     for file in glob.glob("*.pickle"):
         logging.info("Measurement {} RECORDED".format(file))
-        check = pickle.load(open(file, "rb"))
-        persist_measurement(check, file)
+        measurement = pickle.load(open(file, "rb"))
+        persist_measurement(measurement, file)
         os.remove(file)
         logging.info("Measurement {} CLEARED\n".format(file))
 
@@ -107,7 +108,7 @@ def exception_handler(exc_type, exc_value, traceback):
 
 def main():
     sys.excepthook = exception_handler
-    logging.basicConfig(filename='check_speed.log', level=logging.DEBUG)
+    logging.basicConfig(filename='measurements.log', level=logging.DEBUG)
     logging.info("STARTED {}\n".format(datetime.datetime.now()))
     take_measurement()
     record_measurements()
