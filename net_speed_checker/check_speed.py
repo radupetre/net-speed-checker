@@ -89,7 +89,7 @@ def persist_measurement(measurement, file):
     session.add(measurement)
     session.commit()
     logging.info("Measurement {} PERSISTED id {}".format(file, measurement.id))
-    
+
 
 def record_measurements():
     for file in glob.glob("*.pickle"):
