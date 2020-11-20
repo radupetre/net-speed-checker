@@ -65,37 +65,25 @@ def take_measurement():
     logging.info("Measurement {} SAVED\n".format(file))
 
 
-reusable_session = None
+def get_session(db, user, schema, host, password):
+    session = sessionmaker()
+    engine = create_engine(
+        '{}://{}:{}@{}/{}'.format(db, user, password, host, schema))
+    session.configure(bind=engine)
+    return session()
 
 
-def get_session():
-    global reusable_session
-    if reusable_session is None:
-        session = sessionmaker()
-        db = sys.argv[1]
-        user = sys.argv[2]
-        database = sys.argv[3]
-        host = sys.argv[4]
-        password = sys.argv[5]
-        engine = create_engine(
-            '{}://{}:{}@{}/{}'.format(db, user, password, host, database))
-        session.configure(bind=engine)
-        reusable_session = session()
-    return reusable_session
-
-
-def persist_measurement(measurement, file):
-    session = get_session()
+def persist_measurement(measurement, file, session):
     session.add(measurement)
     session.commit()
     logging.info("Measurement {} PERSISTED id {}".format(file, measurement.id))
 
 
-def record_measurements():
+def record_measurements(session):
     for file in glob.glob("*.pickle"):
         logging.info("Measurement {} RECORDED".format(file))
         measurement = pickle.load(open(file, "rb"))
-        persist_measurement(measurement, file)
+        persist_measurement(measurement, file, session)
         os.remove(file)
         logging.info("Measurement {} CLEARED\n".format(file))
 
@@ -106,14 +94,15 @@ def exception_handler(exc_type, exc_value, traceback):
     logging.info("STOPPED {}\n\n".format(datetime.datetime.now()))
 
 
-def main():
+def measure(db, user, schema, host, password):
     sys.excepthook = exception_handler
     logging.basicConfig(filename='measurements.log', level=logging.DEBUG)
     logging.info("STARTED {}\n".format(datetime.datetime.now()))
     take_measurement()
-    record_measurements()
+    session = get_session(db, user, schema, host, password)
+    record_measurements(session)
     logging.info("STOPPED {}\n\n".format(datetime.datetime.now()))
 
 
 if __name__ == '__main__':
-    main()
+    measure(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
