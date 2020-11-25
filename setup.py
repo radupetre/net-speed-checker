@@ -1,9 +1,9 @@
 from setuptools import setup, find_packages
 
-with open('README.md') as f:
+with open('README.md', encoding='utf-8') as f:
     readmeText = f.read()
 
-with open('LICENSE') as f:
+with open('LICENSE', encoding='utf-8') as f:
     licenseText = f.read()
 
 setup(
@@ -13,10 +13,10 @@ setup(
     author_email='Spam@Petre.dev',
     description='Package taking measurements for internet speed.',
     long_description=readmeText,
-    long_description_content_type="text/markdown",
+    long_description_content_type='text/markdown',
     url='https://github.com/radupetre/net-speed-checker',
     download_url='https://github.com/radupetre/net-speed-checker/archive/v0.2.tar.gz',
-    license=licenseText,
+    license='MIT License',
     packages=find_packages(exclude=('test', 'tests', 'docs')),
     keywords=['SPEEDTEST', 'SPEEDCHECKER', 'SPEED', 'TEST', 'CHECKER'],
     classifiers=[
