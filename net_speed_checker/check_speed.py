@@ -15,6 +15,7 @@ from sqlalchemy.orm import sessionmaker
 class Measurement(declarative_base()):
     __tablename__ = 'speed_measurement'
     id = Column(Integer, primary_key=True)
+    client_name = Column(String)
     client_ip = Column(String)
     client_lat = Column(Float)
     client_lon = Column(Float)
@@ -33,7 +34,7 @@ class Measurement(declarative_base()):
     message = Column(String)
 
 
-def take_measurement():
+def take_measurement(process):
     speed_test = speedtest.Speedtest()
     best_server = speed_test.get_best_server()
 
@@ -42,6 +43,7 @@ def take_measurement():
     config = speed_test.get_config()
 
     measurement = Measurement(
+        client_name=process,
         client_ip=config['client']['ip'],
         client_lat=config['client']['lat'],
         client_lon=config['client']['lon'],
@@ -94,15 +96,16 @@ def exception_handler(exc_type, exc_value, traceback):
     logging.info("STOPPED {}\n\n".format(datetime.datetime.now()))
 
 
-def measure(db, user, schema, host, password):
+def measure(process, db, user, schema, host, password):
     sys.excepthook = exception_handler
     logging.basicConfig(filename='measurements.log', level=logging.DEBUG)
     logging.info("STARTED {}\n".format(datetime.datetime.now()))
-    take_measurement()
+    take_measurement(process)
     session = get_session(db, user, schema, host, password)
     record_measurements(session)
     logging.info("STOPPED {}\n\n".format(datetime.datetime.now()))
 
 
 if __name__ == '__main__':
-    measure(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
+    measure(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5],
+            sys.argv[6])
