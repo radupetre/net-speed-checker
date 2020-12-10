@@ -1,5 +1,14 @@
-![Push Build](https://github.com/radupetre/net-speed-checker/workflows/build-push/badge.svg)
-![Release Build](https://github.com/radupetre/net-speed-checker/workflows/build-release/badge.svg)
+![Push Build][push-button]
+![Release Build][release-button]
+![License][license-button]
+![Version][version-button]
+![Status][status-button]
+
+[push-button]: https://github.com/radupetre/net-speed-checker/workflows/build-push/badge.svg
+[release-button]: https://github.com/radupetre/net-speed-checker/workflows/build-release/badge.svg
+[license-button]: https://img.shields.io/pypi/l/net-speed-checker
+[version-button]: https://img.shields.io/pypi/v/net-speed-checker
+[status-button]: https://img.shields.io/pypi/status/net-speed-checker
 
 # Net Speed Checker
 
