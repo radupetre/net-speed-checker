@@ -1,3 +1,6 @@
+![Push Build](https://github.com/radupetre/net-speed-checker/workflows/build-push/badge.svg)
+![Release Build](https://github.com/radupetre/net-speed-checker/workflows/build-release/badge.svg)
+
 # Net Speed Checker
 
 net-speed-checker is a Python3 library for taking net speed measurements and persisting the measurements in RDBS.
