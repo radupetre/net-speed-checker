@@ -9,6 +9,7 @@
 [license-button]: https://img.shields.io/pypi/l/net-speed-checker
 [version-button]: https://img.shields.io/pypi/v/net-speed-checker
 [status-button]: https://img.shields.io/pypi/status/net-speed-checker
+[speedtest-cli]: https://github.com/sivel/speedtest-cli
 
 # Net Speed Checker
 
@@ -67,8 +68,13 @@ create table speed_measurement
 	message varchar(100) not null
 );
 ```
+Mentions
+----
+This library is using [sivel/speedtest-cli][speedtest-cli]
 
 License
 ----
 
 MIT
+
+
